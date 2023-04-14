@@ -24,5 +24,5 @@ if __name__ == '__main__':
     derived_features_chart(
         project_id=project_id,
         model_id=model_id,
-        #selected_class=selected_class
+        selected_class=None
     )
