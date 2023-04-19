@@ -1,4 +1,6 @@
 import os
+
+import streamlit as st
 from datarobot import Deployment, Project, TARGET_TYPE
 from datarobot.client import set_client, Client
 import pandas as pd
@@ -7,14 +9,15 @@ from dr_streamlit import create_prediction_form, prediction_display_chart
 
 if __name__ == '__main__':
     c = Client(
-        token=os.getenv('token'),
-        endpoint='https://app.datarobot.com/api/v2/'
+        token=os.getenv("token"),
+        endpoint=os.getenv('endpoint', 'https://app.datarobot.com/api/v2/')
     )
     set_client(c)
     deployment_id = os.getenv('deploymentid')
     deployment = Deployment.get(deployment_id)
     project = Project.get(deployment.model['project_id'])
-    pred = create_prediction_form(deployment, deployment.model['project_id'], use_batch_prediction_api=False)
+    use_bp_api = st.checkbox('Use Batch Prediction API')
+    pred = create_prediction_form(deployment, deployment.model['project_id'], use_batch_prediction_api=use_bp_api)
     if pred:
         predicted_class = None  # For Multiclass
         if project.target_type == TARGET_TYPE.BINARY:
